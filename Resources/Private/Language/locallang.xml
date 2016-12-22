@@ -33,33 +33,36 @@
             <label index="tx_libconnect.dbis.detail.report_periods">Report Periods:</label>
             <label index="tx_libconnect.dbis.detail.subjects">Subjects:</label>
             <label index="tx_libconnect.dbis.detail.update">Update:</label>
+            <label index="tx_libconnect.dbis.detail.back">Back</label>
 
-            <label index="tx_libconnect.dbis.form.access_type">Access Type:</label>
-            <label index="tx_libconnect.dbis.form.datbase_types">Database Types:</label>
-            <label index="tx_libconnect.dbis.form.extended_search">Extended Search For Databases</label>
+            <label index="tx_libconnect.dbis.form.access_type">Access Type</label>
+            <label index="tx_libconnect.dbis.form.datbase_types">Database Types</label>
+            <label index="tx_libconnect.dbis.form.extended_search">Advanced Search For Databases</label>
             <label index="tx_libconnect.dbis.form.field">Field</label>
-            <label index="tx_libconnect.dbis.form.limit_search">Limit Search On:</label>
+            <label index="tx_libconnect.dbis.form.limit_search">Limit Search On</label>
             <label index="tx_libconnect.dbis.form.link">Link</label>
             <label index="tx_libconnect.dbis.form.negator">Negator</label>
             <label index="tx_libconnect.dbis.form.search_term">Search Term</label>
-            <label index="tx_libconnect.dbis.form.subject">Subject:</label>
-            <label index="tx_libconnect.dbis.form.regions">Regions:</label>
+            <label index="tx_libconnect.dbis.form.subject">Subject</label>
+            <label index="tx_libconnect.dbis.form.regions">Regions</label>
             <label index="tx_libconnect.dbis.form.formal_type">Formal Type</label>
 
             <label index="tx_libconnect.dbis.list.full_list">Complete List</label>
             <label index="tx_libconnect.dbis.list.headline.dbis">DBIS</label>
             <label index="tx_libconnect.dbis.list.headline.subject">List by Subject</label>
-            <label index="tx_libconnect.dbis.list.legend.headline">license:</label>
+            <label index="tx_libconnect.dbis.list.legend.headline">Key</label>
             <label index="tx_libconnect.dbis.list.topdatabases">Top Databases</label>
-                                                                	
-            <label index="tx_libconnect.dbis.miniform.link.sort">Sort</label>
+                                                                    
+            <label index="tx_libconnect.dbis.miniform.link.sort">Sort by:</label>
+            <label index="tx_libconnect.dbis.miniform.sort_type">Database type</label>
+            <label index="tx_libconnect.dbis.miniform.sort_alph">Title</label>
             <label index="tx_libconnect.dbis.miniform.listing_alph">List by Title</label>
             <label index="tx_libconnect.dbis.miniform.listing_subject">List by Subject</label>
             <label index="tx_libconnect.dbis.miniform.listing_type">Database Type</label>
             <label index="tx_libconnect.dbis.miniform.new.all">New in DBIS</label>
             <label index="tx_libconnect.dbis.miniform.new.subject">New in your subject</label>
             <label index="tx_libconnect.dbis.miniform.search_header">Search For Databases</label>
-            <label index="tx_libconnect.dbis.miniform.search_link">Extended Search</label>
+            <label index="tx_libconnect.dbis.miniform.search_link">Advanced Search</label>
             <label index="tx_libconnect.dbis.miniform.search_term">Search Term</label>
             <label index="tx_libconnect.dbis.miniform.select_access">Choose License</label>
             <label index="tx_libconnect.dbis.miniform.show_databases">Show Databases</label>
@@ -74,9 +77,10 @@
 
             <label index="tx_libconnect.dbis.search.criterion">You searched for:</label>
             <label index="tx_libconnect.dbis.search.hits">Hit(s) %s:</label>
-            <label index="tx_libconnect.dbis.search.licence">License:</label>
+            <label index="tx_libconnect.dbis.search.licence">Key</label>
             <label index="tx_libconnect.dbis.search.results">Results of your search</label>
             <label index="tx_libconnect.dbis.search.top_databases">Top Databases</label>
+            <label index="tx_libconnect.dbis.search.edit_search">Edit search</label>
             
             <!-- EZB -->
 
@@ -139,7 +143,7 @@
 
             <label index="tx_libconnect.ezb.form.input.search">Search</label>
             <label index="tx_libconnect.ezb.form.label.access">Fulltext article are</label>
-            <label index="tx_libconnect.ezb.form.label.extsearchform">Extended search of journals</label>
+            <label index="tx_libconnect.ezb.form.label.extsearchform">Advanced search of journals</label>
             <label index="tx_libconnect.ezb.form.label.hits">Hits per page</label>
             <label index="tx_libconnect.ezb.form.label.link">Link</label>
             <label index="tx_libconnect.ezb.form.label.searchterm">Search tearm</label>
@@ -162,7 +166,7 @@
 
             <label index="tx_libconnect.ezb.miniform.link.allsubjects">Overview subjects</label>
             <label index="tx_libconnect.ezb.miniform.link.alphabetical">List by Title</label>
-            <label index="tx_libconnect.ezb.miniform.link.extended_search">Extended search</label>
+            <label index="tx_libconnect.ezb.miniform.link.extended_search">Advanced search</label>
             <label index="tx_libconnect.ezb.miniform.link.sort">Sort</label>
             <label index="tx_libconnect.ezb.miniform.link.subject">List by subject</label>
             <label index="tx_libconnect.ezb.miniform.new.all">New in EZB</label>
@@ -199,7 +203,7 @@
         <languageKey index="de" type="array">
             <!-- all -->
 
-            <label index="tx_libconnect.submit.search">Suchen</label>
+            <label index="tx_libconnect.submit.search">Suche</label>
             
             <!-- DBIS -->
 
@@ -224,30 +228,31 @@
             <label index="tx_libconnect.dbis.detail.report_periods">Berichtszeitraum:</label>
             <label index="tx_libconnect.dbis.detail.subjects">Fachgebiete:</label>
             <label index="tx_libconnect.dbis.detail.update">Erscheinungsweise:</label>
+            <label index="tx_libconnect.dbis.detail.back">Zurück</label>
 
-            <label index="tx_libconnect.dbis.form.access_type">Zugangsart:</label>
-            <label index="tx_libconnect.dbis.form.datbase_types">Datenbank-Typen:</label>
+            <label index="tx_libconnect.dbis.form.access_type">Zugangsart</label>
+            <label index="tx_libconnect.dbis.form.datbase_types">Datenbank-Typen</label>
             <label index="tx_libconnect.dbis.form.extended_search">Erweiterte Suche nach Datenbanken</label>
             <label index="tx_libconnect.dbis.form.field">Feldangabe</label>
-            <label index="tx_libconnect.dbis.form.limit_search">Suche einschränken auf:</label>
+            <label index="tx_libconnect.dbis.form.limit_search">Suche einschränken auf</label>
             <label index="tx_libconnect.dbis.form.link">Verknüpfung</label>
             <label index="tx_libconnect.dbis.form.negator">Negator</label>
             <label index="tx_libconnect.dbis.form.search_term">Suchbegriff</label>
-            <label index="tx_libconnect.dbis.form.subject">Fachgebiete:</label>
-
-            <label index="tx_libconnect.dbis.form.regions">Regionen:</label>
+            <label index="tx_libconnect.dbis.form.subject">Fachgebiete</label>
+            <label index="tx_libconnect.dbis.form.regions">Regionen</label>
             <label index="tx_libconnect.dbis.form.formal_type">Formaler Typ</label>
 
             <label index="tx_libconnect.dbis.list.full_list">Gesamtangebot</label>
             <label index="tx_libconnect.dbis.list.headline.dbis">DBIS</label>
             <label index="tx_libconnect.dbis.list.headline.subject">Fachgebiet</label>
-            <label index="tx_libconnect.dbis.list.legend.headline">Zugriffe:</label>
-            <label index="tx_libconnect.dbis.list.topdatabases">Top Datenbanken</label>
-                                                                	
-            <label index="tx_libconnect.dbis.miniform.link.sort">Sortierung</label>
-            <label index="tx_libconnect.dbis.miniform.listing_alph">alphabetisch</label>
+            <label index="tx_libconnect.dbis.list.legend.headline">Legende</label>
+            <label index="tx_libconnect.dbis.list.topdatabases">Top-Datenbanken</label>
+                                                                    
+            <label index="tx_libconnect.dbis.miniform.link.sort">Sortieren nach:</label>
+            <label index="tx_libconnect.dbis.miniform.sort_type">Datenbanktyp</label>
+            <label index="tx_libconnect.dbis.miniform.sort_alph">Name</label>
+            <label index="tx_libconnect.dbis.miniform.listing_alph">Alphabetische Übersicht</label>
             <label index="tx_libconnect.dbis.miniform.listing_subject">Fachübersicht</label>
-            <label index="tx_libconnect.dbis.miniform.listing_type">nach Datenbanktyp</label>
             <label index="tx_libconnect.dbis.miniform.new.all">Neu in DBIS</label>
             <label index="tx_libconnect.dbis.miniform.new.subject">Neu in Ihrem Fachgebiet</label>
             <label index="tx_libconnect.dbis.miniform.search_header">Suche nach Datenbanken</label>
@@ -255,7 +260,7 @@
             <label index="tx_libconnect.dbis.miniform.search_term">Suchbegriff</label>
             <label index="tx_libconnect.dbis.miniform.select_access">Zugang wählen</label>
             <label index="tx_libconnect.dbis.miniform.show_databases">Datenbanken anzeigen</label>
-            <label index="tx_libconnect.dbis.miniform.submit.search">Suchen</label>
+            <label index="tx_libconnect.dbis.miniform.submit.search">Suche</label>
 
             <label index="tx_libconnect.dbis.new.headline">Neu in DBIS</label>
             <label index="tx_libconnect.dbis.new.headline.subject">Fachgebiet</label>
@@ -265,10 +270,11 @@
             <label index="tx_libconnect.dbis.overview.headline">Datenbank-Infosystem</label>
 
             <label index="tx_libconnect.dbis.search.criterion">Sie suchten nach folgenden Kriterien:</label>
-            <label index="tx_libconnect.dbis.search.hits">Die Suche ergab %s Treffer:</label>
-            <label index="tx_libconnect.dbis.search.licence">Zugriffe:</label>
+            <label index="tx_libconnect.dbis.search.hits">Die Suche ergab %s Treffer.</label>
+            <label index="tx_libconnect.dbis.search.licence">Legende</label>
             <label index="tx_libconnect.dbis.search.results">Ergebnisse Ihrer Suche</label>
-            <label index="tx_libconnect.dbis.search.top_databases">Top Datenbanken</label>
+            <label index="tx_libconnect.dbis.search.top_databases">Top-Datenbanken</label>
+            <label index="tx_libconnect.dbis.search.edit_search">Suche ändern</label>
 
             <!-- EZB -->
 

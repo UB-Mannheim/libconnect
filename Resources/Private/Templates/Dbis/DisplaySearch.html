@@ -1,5 +1,10 @@
 {namespace libconnect=Sub\Libconnect\ViewHelpers}
+
+<f:comment>
+/* UBMA: Überschrift ausblenden
 <h1 class="libconnect-h1"><f:translate key="LLL:EXT:libconnect/Resources/Private/Language/locallang.xml:tx_libconnect.dbis.search.results" /></h1>
+*/
+</f:comment>
 
 <p><f:translate key="LLL:EXT:libconnect/Resources/Private/Language/locallang.xml:tx_libconnect.dbis.search.criterion" /></p>
 <ul>
@@ -17,7 +22,11 @@
         </p>
     </f:then>
     <f:else>
+		<f:comment>
+		/* UBMA: Überschrift ausblenden
         <h3 class="libconnect-h3"><f:translate key="LLL:EXT:libconnect/Resources/Private/Language/locallang.xml:tx_libconnect.dbis.search.licence" /></h3>
+		*/
+		</f:comment>
 
         <div class="dbis-list-legend">
             <ul>

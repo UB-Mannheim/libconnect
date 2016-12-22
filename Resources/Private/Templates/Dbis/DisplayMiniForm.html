@@ -1,21 +1,54 @@
 {namespace libconnect=Sub\Libconnect\ViewHelpers}
 
 <div class="datenbank-suche-wrapper">
+
+<f:comment>
+		/* UBMA: Überschrift ausblenden
     <h2 class="libconnect-h2"><f:translate key="LLL:EXT:libconnect/Resources/Private/Language/locallang.xml:tx_libconnect.dbis.miniform.search_header" /></h2>
+*/
+</f:comment>
 
     <f:form action="{listUrl}" method="get" pageUid="{listPid}">
         <f:form.hidden name="id" value="{listPid}"/>
         
         <label for="libconnect_dbis_minisuche" class="hiddendebis"><f:translate key="LLL:EXT:libconnect/Resources/Private/Language/locallang.xml:tx_libconnect.dbis.miniform.search_term" /></label>
-        <f:form.textfield type="text" id="libconnect_dbis_minisuche" name="search[sword]" value="{vars.sword}" size="20"/><br/>
+        <f:form.textfield type="text" id="libconnect_dbis_minisuche" name="search[sword]" value="{vars.sword}" size="20"/>
         
         <f:form.submit name="submit" value='<f:translate key="LLL:EXT:libconnect/Resources/Private/Language/locallang.xml:tx_libconnect.dbis.miniform.search_term" />'/>
         
-        <p><a href="{searchUrl}"><f:translate key="LLL:EXT:libconnect/Resources/Private/Language/locallang.xml:tx_libconnect.dbis.miniform.search_link" /></a></p>    
+        <p><a href="{searchUrl}"><f:translate key="LLL:EXT:libconnect/Resources/Private/Language/locallang.xml:tx_libconnect.dbis.miniform.search_link" /></a>
+		
+		<f:if condition="{listingsWrapper}">
+        <f:then>
+            
+                <f:link.page pageUid="{listPid}" additionalParams="{libconnect: '{sort:\'type\'}'}" addQueryString="1">
+                    <f:translate key="LLL:EXT:libconnect/Resources/Private/Language/locallang.xml:tx_libconnect.dbis.miniform.listing_type" />
+                </f:link.page>
+
+                <f:link.page pageUid="{listPid}" additionalParams="{libconnect: '{sort:\'alph\'}'}" addQueryString="1">
+                    <f:translate key="LLL:EXT:libconnect/Resources/Private/Language/locallang.xml:tx_libconnect.dbis.miniform.listing_alph" />
+                </f:link.page>
+            
+
+        </f:then>
+        <f:else>
+           
+                <f:link.page pageUid="{listPid}" addQueryString="0">
+                    <f:translate key="LLL:EXT:libconnect/Resources/Private/Language/locallang.xml:tx_libconnect.dbis.miniform.listing_subject" />
+                </f:link.page>
+
+                <f:link.page pageUid="{listPid}" additionalParams="{libconnect: {subject: 'all'}}" addQueryString="1">
+                    <f:translate key="LLL:EXT:libconnect/Resources/Private/Language/locallang.xml:tx_libconnect.dbis.miniform.listing_alph" />
+                </f:link.page>
+            </p>
+        </f:else>
+    </f:if>
     </f:form>
 
 </div>
 
+<f:comment>
+/* UBMA: Ausblenden des nicht benötigten Dropdowns der verschiedenen Lizenzierungen
 <f:if condition="{vars.sword}">
     <f:then></f:then>
     <f:else>
@@ -43,7 +76,11 @@
         </div>
     </f:else>
 </f:if>
+/*
+</f:comment>
 
+<f:comment>
+/* UBMA: Ausblenden von Sortierungs-DIV (wird oben angezeigt)
 <div class="dbis-listings-wrapper">
     <h2 class="ezb-sort"><f:translate key="LLL:EXT:libconnect/Resources/Private/Language/locallang.xml:tx_libconnect.ezb.miniform.link.sort" /></h2>
 
@@ -77,6 +114,8 @@
         </f:else>
     </f:if>
 </div>
+*/
+</f:comment>
 
 <f:if condition="{newUrl}">
     <div class="dbis-listings-wrapper">

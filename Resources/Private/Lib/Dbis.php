@@ -37,7 +37,7 @@
  * @author Torsten Witt
  *
  */
-
+ 
 require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('libconnect') . 'Resources/Private/Lib/Xmlpageconnection.php');
 require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('libconnect') . 'Resources/Private/Lib/Httppageconnection.php');
 
@@ -161,18 +161,99 @@ class Tx_Libconnect_Resources_Private_Lib_Dbis {
         $url =  $this->dbliste_url. $this->bibID .'&colors='. $this->colors .'&ocolors='. $this->ocolors .'&sort='. $sort . '&';
         $headline = '';
 
-        //BOF workaround for alphabetical listing
+        //UBMA: Workaround um alle Buchstaben in der alphabetischen Übersicht zu haben
         if ($fachgebiet == 'all') {
+            //Information einholen, welche Charblocks es gibt
+            $url =  $this->dbliste_url. $this->bibID .'&colors='. $this->colors .'&ocolors='. $this->ocolors .'&sort='. $sort . '&' . 'lett=a';
+            $xml_fachgebiet_db = $this->XMLPageConnection->getDataFromXMLPage($url);
 
-            $url .='lett=a';
-            $tmpParams = \TYPO3\CMS\Core\Utility\GeneralUtility::_GET('libconnect');
+            /* UBMA Debugging
+            var_dump($xml_fachgebiet_db);
+            foreach($xml_fachgebiet_db->list_dbs->alphabetical_list->block_of_chars as $charBlock) {
+                echo " chars: ";
+               foreach ($charBlock->char as $char) {
+                echo $char;
+                }
+                echo " fc: ", $charBlock->attributes()->fc;
+                echo " lc: ", $charBlock->attributes()->lc;
+                echo " ### ";
+            }*/
 
-            if (!empty($tmpParams['lc'])) {
-                $url .= '&lc=' . $tmpParams['lc'];
-            }
-            if (!empty($tmpParams['fc'])) {
-                $url .= '&fc=' . $tmpParams['fc'];
-            }
+            
+            //echo \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($xml_fachgebiet_db,'xml antwort auf neue url anfrage');
+            //echo \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($xml_fachgebiet_db->list_dbs->alphabetical_list,'summe der charblocks?');
+            $list = array(
+                'top' => array(),
+                'groups' => array(),
+                'access_infos' => array()
+            );
+
+            if (is_object($xml_fachgebiet_db->list_dbs->alphabetical_list)) {
+                foreach ($xml_fachgebiet_db->list_dbs->alphabetical_list->block_of_chars as $charBlock) {
+                    //Anfrage URL um FC und LC ergänzen
+                    $url =  $this->dbliste_url. $this->bibID .'&colors='. $this->colors .'&ocolors='. $this->ocolors .'&sort='. $sort . '&' . 'lett=a' . '&lc=' . $charBlock->attributes()->lc . '&fc=' . $charBlock->attributes()->fc;
+                    //echo \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($url,'url mit neuen fc und lc');
+                    //Daten von DBIS abfragen
+                    $xml_fachgebiet_db = $this->XMLPageConnection->getDataFromXMLPage($url);
+                    //echo \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($xml_fachgebiet_db,'xml antwort auf neue url anfrage');
+                    
+                    if (isset($xml_fachgebiet_db->list_dbs->db_access_infos->db_access_info)) {
+                        foreach ($xml_fachgebiet_db->list_dbs->db_access_infos->db_access_info as $value) {
+                            //Für jede Datenbank innerhalb des Charblocks Eintrag im Gesamtlistenarray erstellen
+                            $id = (string) $value->attributes()->access_id;
+                            $list['access_infos'][$id] = array(
+                                'id' => $id,
+                                'title' => (string) $value->db_access,
+                                'description' => (string) $value->db_access_short_text,
+                                'dbs' => array()
+                            );
+                        }
+                    }
+                    if (isset($xml_fachgebiet_db->list_dbs->dbs)) {
+                        foreach ($xml_fachgebiet_db->list_dbs->dbs as $value) {
+                            //Für jeden Char! eine Gruppe mit den einzelnen Datenbanken erstellen 
+                            $id = (string) $value->attributes()->char;
+                            $title = (string) $value->attributes()->char;
+                            $list['groups'][$id] = array(
+                                'id' => $id,
+                                'title' => $title,
+                                'dbs' => array()
+                            );
+                        }
+                    }
+                    if (isset($xml_fachgebiet_db->list_dbs->dbs)) {
+                    foreach ($xml_fachgebiet_db->list_dbs->dbs as $dbs) {
+            
+                        foreach ($dbs->db as $value) {
+                            $db = array(
+                                'id' => (int) $value['title_id'],
+                                'title' => (string) $value,
+                                'access_ref' => (string) $value['access_ref'],
+                                'access' => $list['access_infos'][(string) $value['access_ref']]['title'],
+                                'db_type_refs' => (string) $value['db_type_refs'],
+                                'top_db' => (int) $value['top_db'],
+                                'link' => $this->db_detail_url . $this->bibID .'&lett='. $this->lett .'&titel_id='. $value['title_id'],
+                            );
+         
+                        $list['groups'][(string) $dbs->attributes()->char]['dbs'][] = $db;
+                        $sortlist[$db['access']] = $db['access_ref'];
+                        }
+                    }
+                    }
+                    
+                    if (!empty($sortlist) && ($sort == 'access')) {
+                        natsort($sortlist);
+                        foreach ($sortlist as $value => $key) {
+                            $list['alphasort'][$value] = $key;
+                        }
+                }
+           }
+           //echo \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($list,'List nach foreach schleife');
+           $list['alphNavList'] = TRUE;
+           $list['alphasort'] = $sortlist;
+            return array('groups' => $access_infos, 'list' => $list, 'headline' =>$headline);
+            exit();
+            } 
         } else {
 
             if (is_numeric($fachgebiet)) {
@@ -196,7 +277,7 @@ class Tx_Libconnect_Resources_Private_Lib_Dbis {
         if (isset($xml_fachgebiet_db->headline)){
             $headline = $xml_fachgebiet_db->headline;
         }
-
+        /*
         //BOF workaround for alphabetical listing
         if (is_object($xml_fachgebiet_db->list_dbs->alphabetical_list)) {
             $alphabeticalNavList = array();
@@ -230,7 +311,7 @@ class Tx_Libconnect_Resources_Private_Lib_Dbis {
         }
         $list['alphNavList'] = (isset($alphabeticalNavList) && count($alphabeticalNavList) ? $alphabeticalNavList : FALSE);
         //EOF workaround for alphabetical listing
-
+        */
         if (isset($xml_fachgebiet_db->list_dbs->db_access_infos->db_access_info)) {
             foreach ($xml_fachgebiet_db->list_dbs->db_access_infos->db_access_info as $value) {
                 $id = (string) $value->attributes()->access_id;
@@ -247,7 +328,7 @@ class Tx_Libconnect_Resources_Private_Lib_Dbis {
             $list['groups'] = &$list['access_infos'];
             //BOF workaround for alphabetical listing			
         } elseif ($fachgebiet == 'all') {
-            if (isset($xml_fachgebiet_db->list_dbs->dbs)) {
+          /*  if (isset($xml_fachgebiet_db->list_dbs->dbs)) {
                 foreach ($xml_fachgebiet_db->list_dbs->dbs as $value) {
                     $id = (string) $value->attributes()->char;
                     $title = (string) $value->attributes()->char;
@@ -257,7 +338,7 @@ class Tx_Libconnect_Resources_Private_Lib_Dbis {
                         'dbs' => array()
                     );
                 }
-            }
+            }*/
             //EOF workaround for alphabetical listing
         } else {
             if (isset($xml_fachgebiet_db->list_dbs->db_type_infos->db_type_info)) {
@@ -277,7 +358,6 @@ class Tx_Libconnect_Resources_Private_Lib_Dbis {
             foreach ($xml_fachgebiet_db->list_dbs->dbs as $dbs) {
     
                 foreach ($dbs->db as $value) {
-    
                     $db = array(
                         'id' => (int) $value['title_id'],
                         'title' => (string) $value,
@@ -292,8 +372,9 @@ class Tx_Libconnect_Resources_Private_Lib_Dbis {
                         $list['top'][] = $db;
                         //BOF workaround for alphabetical listing			
                     } elseif ($fachgebiet == 'all') {
-                        $list['groups'][(string) $dbs->attributes()->char]['dbs'][] = $db;
+                       /* $list['groups'][(string) $dbs->attributes()->char]['dbs'][] = $db;
                         $sortlist[$db['access']] = $db['access_ref'];
+                        */
                         //EOF workaround for alphabetical listing
                     } else {
                         if ($sort == 'alph') {
