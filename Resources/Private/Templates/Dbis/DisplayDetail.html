@@ -8,10 +8,17 @@
         <p>
             <f:translate key="LLL:EXT:libconnect/Resources/Private/Language/locallang.xml:tx_libconnect.dbis.detail.error.p2" />
         </p>
+        <p><a href="javascript:history.back()"><f:translate key="LLL:EXT:libconnect/Resources/Private/Language/locallang.xml:tx_libconnect.dbis.detail.back" /></a></p>
     </f:then>
     <f:else>
         {namespace libconnect=Sub\Libconnect\ViewHelpers}
+
+        <f:comment>
+        /* UBMA: Überschrift ausblenden
         <h1 class="libconnect-h1"><f:translate key="LLL:EXT:libconnect/Resources/Private/Language/locallang.xml:tx_libconnect.dbis.detail.database" /></h1>
+        */
+        </f:comment>
+
         <h2 class="libconnect-h2"><f:format.htmlentitiesDecode>{db.title}</f:format.htmlentitiesDecode></h2>
 
         <f:if condition="{db.access_workaround}">
@@ -21,6 +28,8 @@
                 </p>
             </f:if>
         </f:if>
+
+        <p><a href="javascript:history.back()"><f:translate key="LLL:EXT:libconnect/Resources/Private/Language/locallang.xml:tx_libconnect.dbis.detail.back" /></a></p>
 
         <table class="dbis-result-details">
             <tbody>
@@ -170,7 +179,7 @@
                         </td>
                     </tr>
                 </f:if>
-            
+
                 <f:if condition="{db.more_internet_accesses}">
                     <tr>
                         <th>
@@ -181,7 +190,7 @@
                         </td>
                     </tr>
                 </f:if>
-            
+
                 <f:if condition="{db.publisher}">
                     <tr>
                         <th>
@@ -239,6 +248,10 @@
 
             </tbody>
         </table>
+    <p><a href="javascript:history.back()"><f:translate key="LLL:EXT:libconnect/Resources/Private/Language/locallang.xml:tx_libconnect.dbis.detail.back" /></a></p>
     </f:else>
 </f:if>
 </div>
+
+
+<f:render partial="dbis_Footer" />
