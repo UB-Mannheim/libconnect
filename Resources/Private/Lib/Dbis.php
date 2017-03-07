@@ -55,7 +55,7 @@ class Tx_Libconnect_Resources_Private_Lib_Dbis {
 
     public $all;
     public $top_five_dbs;
-    // typoscript Konfigurationsvariablen
+    //variable of typoscript configuration
     private $bibID;
     private $licenceForbid = array();
     // sources
@@ -125,7 +125,7 @@ class Tx_Libconnect_Resources_Private_Lib_Dbis {
     }
 
     /**
-     * Alle Fachbereiche auslesen
+     * red all subjects
      *
      * @return array()
      */
@@ -148,7 +148,7 @@ class Tx_Libconnect_Resources_Private_Lib_Dbis {
     }
 
     /**
-     * Return the list Fachgebiet
+     * returns entries of a subject
      *
      * @param integer $fachgebiet
      * @param string $sort
@@ -176,10 +176,10 @@ class Tx_Libconnect_Resources_Private_Lib_Dbis {
         } else {
 
             if (is_numeric($fachgebiet)) {
-                // notation ist eine id => dbis sammlung
+                //notation is an id => dbis collection
                 $url .= 'lett=f&gebiete=' . $fachgebiet;
             } else {
-                // notation ist ein Zeichen => eigene sammlung
+                //notation is a character => own colelction
                 $url .= 'lett=c&collid=' . $fachgebiet;
             }
         }
@@ -192,7 +192,7 @@ class Tx_Libconnect_Resources_Private_Lib_Dbis {
             'access_infos' => array()
         );
 
-        // Name der eigenen Sammlung
+        //name of own collection
         if (isset($xml_fachgebiet_db->headline)){
             $headline = $xml_fachgebiet_db->headline;
         }
@@ -275,9 +275,9 @@ class Tx_Libconnect_Resources_Private_Lib_Dbis {
 
         if (isset($xml_fachgebiet_db->list_dbs->dbs)) {
             foreach ($xml_fachgebiet_db->list_dbs->dbs as $dbs) {
-    
+
                 foreach ($dbs->db as $value) {
-    
+
                     $db = array(
                         'id' => (int) $value['title_id'],
                         'title' => (string) $value,
@@ -287,7 +287,7 @@ class Tx_Libconnect_Resources_Private_Lib_Dbis {
                         'top_db' => (int) $value['top_db'],
                         'link' => $this->db_detail_url . $this->bibID .'&lett='. $this->lett .'&titel_id='. $value['title_id'],
                     );
-        
+
                     if ($db['top_db']) {
                         $list['top'][] = $db;
                         //BOF workaround for alphabetical listing			
@@ -313,7 +313,6 @@ class Tx_Libconnect_Resources_Private_Lib_Dbis {
             }
         }
 
-
         if (!empty($sortlist) && ($sort == 'access')) {
             natsort($sortlist);
             foreach ($sortlist as $value => $key) {
@@ -327,9 +326,9 @@ class Tx_Libconnect_Resources_Private_Lib_Dbis {
     }
 
     /**
-     * liefert Detailinformationen
+     * get detail information
      *
-     * @param integer Id der DB
+     * @param integer id of the entry
      *
      * @return array
      */
@@ -339,15 +338,21 @@ class Tx_Libconnect_Resources_Private_Lib_Dbis {
         $url =  $this->db_detail_url. $this->bibID .'&lett='. $this->lett .'&colors='. $this->colors .'&ocolors='. $this->ocolors .'&titel_id='. $db_id;
         $xml_db_details = $this->XMLPageConnection->getDataFromXMLPage($url);
 
-        //@todo Fehlerbehandlung
+        //@todo error message
         if (!isset($xml_db_details->details)) {
             return FALSE;
         }
 
+        //library
+        $details['library']['bib_id'] = (string) $xml_db_details->library->attributes()->bib_id;
+        $details['library']['name'] = (string) $xml_db_details->library;
+
+        //details
         if (count($xml_db_details->details->children()) > 0){
+            $details['titel_id'] = $db_id;
 
             foreach ($xml_db_details->details->children() as $key => $value) {
-
+                
                 if ($key == 'titles') {
                     $details['else_titles'] = array();
                     foreach ($value->children() as $key2 => $value2) {
@@ -362,20 +367,33 @@ class Tx_Libconnect_Resources_Private_Lib_Dbis {
                     $details['access_icon'] = (string) $value->attributes()->access_icon;
                     $details['db_access'] = (string) $value->db_access;
                     $details['db_access_short_text'] = (string) $value->db_access_short_text;
+                } else if ($key == 'biblist') {
+
+                    //libraries with access to the title
+                    foreach ($value->children() as $key2 => $value2) {
+                        $details['biblist'] []= array(
+                                'bibname' => (string) $value2,
+                                'bib_id' => (string) $value2->attributes()->bib_id
+                            );
+                    }
+
                 } else if ($key == 'accesses') {
 
-                    //Zugänge
+                    //accesses
                     foreach ($value->access as $access) {
 
                         $main = (string) $access->attributes()->main;
                         $type = (string) $access->attributes()->type;
                         $href = (string) $access->attributes()->href;
+                        
                         if ($main == 'Y') {
+                            //main link to start the research
                             $details['access'] = array(
                                 'type' => $type,
                                 'href' => $href
                             );
                         } else {
+                            //other links to start resarch
                             $details['access_lic'][$type][] = array(
                                 'name' => (string) $access,
                                 'href' => $href
@@ -394,21 +412,19 @@ class Tx_Libconnect_Resources_Private_Lib_Dbis {
                 } else if ($key == 'db_type_infos') {
                     $i=0;
                     foreach ($value->children() as $value2) {
-                        //(string)$value->attributes()->db_type_id
-                        //@todo da muss noch iergendwie die id rein und nicht nur i
                         $details['db_type_infos'][$i]['type'] = (string) $value2->db_type;
                         $details['db_type_infos'][$i]['long_text'] = (string) $value2->db_type_long_text;
                         $i++;
                     }
                     //$details['db_type_infos_join'] = join(', ', $details['db_type_infos']);
                 } else if ($key == 'hints') {
-                    //warpto-Link ist relativ, daher muss er vervollstaendigt werden
+                    //warpto link must be completet, because ist is relative
                     $hint = preg_replace('/warpto/', 'http://rzblx10.uni-regensburg.de/dbinfo/warpto',  (string) $value);
                     $details['hints'] =  $hint;
                 } else if ($key == 'instruction') {
                     $details['instruction'] = (string) $value;
                 }
-                // copy all left values into array
+                //copy all left values into array
                 else {
                     $details[(string)$key] = (string) $value;
                 }
@@ -423,7 +439,7 @@ class Tx_Libconnect_Resources_Private_Lib_Dbis {
     }
 
     /**
-     * Detailsuche Formular ausgeben
+     * returns detail search form
      *
      * @return array
      */
@@ -469,7 +485,7 @@ class Tx_Libconnect_Resources_Private_Lib_Dbis {
     }
 
     /**
-     * Suchurl erzeugen
+     * returns search url
      *
      * @param array $searchVars
      * @param string $lett
@@ -501,7 +517,7 @@ class Tx_Libconnect_Resources_Private_Lib_Dbis {
     }
 
     /**
-     * Suche durchführen
+     * execute search
      *
      * @param string $term
      * @param mixed $searchVars
@@ -510,7 +526,7 @@ class Tx_Libconnect_Resources_Private_Lib_Dbis {
      * @return array
      */
     public function search($term, $searchVars = FALSE, $lett = 'fs') {
-        //falls jemand kein utf-8 verwendet
+
         if((mb_strtolower($GLOBALS['TSFE']->metaCharset)) == 'utf-8'){
             $term = utf8_decode($term);
         }

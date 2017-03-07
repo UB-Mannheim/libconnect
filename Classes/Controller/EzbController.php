@@ -144,7 +144,7 @@ class EzbController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController  
         } else {//start point
             
             $liste =  $this->ezbRepository->loadOverview();
-            
+
             //change view
             $controllerContext = $this->buildControllerContext();
             $controllerContext->getRequest()->setControllerActionName('displayOverview');
@@ -185,7 +185,6 @@ class EzbController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController  
         //check if locationData is enabled
         if($this->settings['enableLocationData'] == 1) {
             $locationData = $this->ezbRepository->loadLocationData($journal);
-
             if($locationData) {
                 $journal['locationData'] = $locationData;
             }
@@ -211,11 +210,9 @@ class EzbController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController  
         //include CSS
         $this->decideIncludeCSS();
 
-        $form = $this->ezbRepository->loadMiniForm();
-
         //variables for template
         $this->view->assign('vars', $params['search']);
-        $this->view->assign('form', $form);
+
         $this->view->assign('siteUrl', $GLOBALS['TSFE']->cObj->getTypolink_URL($GLOBALS['TSFE']->id));//current URL
         $this->view->assign('searchUrl', $GLOBALS['TSFE']->cObj->getTypolink_URL($this->settings['flexform']['searchPid']));//link to search
         $this->view->assign('listUrl', $GLOBALS['TSFE']->cObj->getTypolink_URL($this->settings['flexform']['listPid']));//link to search results
