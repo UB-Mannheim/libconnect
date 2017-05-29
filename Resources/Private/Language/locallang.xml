@@ -9,7 +9,7 @@
             <!-- all -->
 
             <label index="tx_libconnect.submit.search">Search</label>
-            
+
             <!-- DBIS -->
 
             <label index="tx_libconnect.dbis.detail.access.alic">More Licensed Access:</label>
@@ -28,21 +28,18 @@
             <label index="tx_libconnect.dbis.detail.error.p2">Maybe the selected database doesn´t exist. Please retry or ask the administrator.</label>
             <label index="tx_libconnect.dbis.detail.instruction">Instruction:</label>
             <label index="tx_libconnect.dbis.detail.keywords">Tags:</label>
-            <label index="tx_libconnect.dbis.detail.license">License:</label>            
+            <label index="tx_libconnect.dbis.detail.license">License:</label>
             <label index="tx_libconnect.dbis.detail.othertitle">Other Titels:</label>
-            <label index="tx_libconnect.dbis.detail.publisher">Publisher:</label>                        
+            <label index="tx_libconnect.dbis.detail.publisher">Publisher:</label>
             <label index="tx_libconnect.dbis.detail.recherche">Start Search</label>
             <label index="tx_libconnect.dbis.detail.remarks">More Remarks</label>
             <label index="tx_libconnect.dbis.detail.report_periods">Report Periods:</label>
             <label index="tx_libconnect.dbis.detail.subjects">Subjects:</label>
             <label index="tx_libconnect.dbis.detail.update">Update:</label>
-<<<<<<< HEAD
             <label index="tx_libconnect.dbis.detail.back">Back</label>
-=======
             <label index="tx_libconnect.dbis.detail.notavailable_start">This title is for the</label>
             <label index="tx_libconnect.dbis.detail.notavailable_end">not available.</label>
             <label index="tx_libconnect.dbis.detail.library_with_title">Library/ies with proofed stock:</label>
->>>>>>> refs/remotes/subhh/master
 
             <label index="tx_libconnect.dbis.form.access_type">Access Type</label>
             <label index="tx_libconnect.dbis.form.datbase_types">Database Types</label>
@@ -61,7 +58,7 @@
             <label index="tx_libconnect.dbis.list.headline.subject">List by Subject</label>
             <label index="tx_libconnect.dbis.list.legend.headline">Key</label>
             <label index="tx_libconnect.dbis.list.topdatabases">Top Databases</label>
-                                                                    
+
             <label index="tx_libconnect.dbis.miniform.link.sort">Sort by:</label>
             <label index="tx_libconnect.dbis.miniform.sort_type">Database type</label>
             <label index="tx_libconnect.dbis.miniform.sort_alph">Title</label>
@@ -90,10 +87,10 @@
             <label index="tx_libconnect.dbis.search.results">Results of your search</label>
             <label index="tx_libconnect.dbis.search.top_databases">Top Databases</label>
             <label index="tx_libconnect.dbis.search.edit_search">Edit search</label>
-            
+
             <!-- EZB -->
 
-            <label index="tx_libconnect.ezb.articipants.categories">2. categories:</label>            
+            <label index="tx_libconnect.ezb.articipants.categories">2. categories:</label>
             <label index="tx_libconnect.ezb.articipants.countries">1. countries:</label>
             <label index="tx_libconnect.ezb.articipants.infotext">With the following form you can change your institution view for displaying the related holdings information.</label>
             <label index="tx_libconnect.ezb.articipants.participants">3. Choose your institution:</label>
@@ -115,7 +112,7 @@
             <label index="tx_libconnect.ezb.detail.movingwall.end.i.more">issues</label>
             <label index="tx_libconnect.ezb.detail.movingwall.end.i.one">issue</label>
             <label index="tx_libconnect.ezb.detail.movingwall.end.d.more">days</label>
-            <label index="tx_libconnect.ezb.detail.movingwall.end.d.one">day</label>            
+            <label index="tx_libconnect.ezb.detail.movingwall.end.d.one">day</label>
             <label index="tx_libconnect.ezb.detail.movingwall.end.m.more">months</label>
             <label index="tx_libconnect.ezb.detail.movingwall.end.m.one">month</label>
             <label index="tx_libconnect.ezb.detail.movingwall.end.v.more">volumes</label>
@@ -208,12 +205,12 @@
             <label index="tx_libconnect_domain_model_subject.title">Name of subject</label>
 
         </languageKey>
-        
+
         <languageKey index="de" type="array">
             <!-- all -->
 
             <label index="tx_libconnect.submit.search">Suche</label>
-            
+
             <!-- DBIS -->
 
             <label index="tx_libconnect.dbis.detail.access.alic">Weitere lizenzierte Zugänge:</label>
@@ -232,21 +229,18 @@
             <label index="tx_libconnect.dbis.detail.error.p2">Möglicherweise ist die angefragte Datenbank nicht vorhanden. Bitte versuchen Sie es erneut oder wenden Sie sich an das Web-Team der Bibliothek, das Ihnen beim Auffinden des Datensatzes gerne behilflich ist.</label>
             <label index="tx_libconnect.dbis.detail.instruction">Anleitung:</label>
             <label index="tx_libconnect.dbis.detail.keywords">Schlagwörter:</label>
-            <label index="tx_libconnect.dbis.detail.license">Lizenz:</label>            
+            <label index="tx_libconnect.dbis.detail.license">Lizenz:</label>
             <label index="tx_libconnect.dbis.detail.othertitle">Weitere Titel:</label>
-            <label index="tx_libconnect.dbis.detail.publisher">Verlag:</label>                        
+            <label index="tx_libconnect.dbis.detail.publisher">Verlag:</label>
             <label index="tx_libconnect.dbis.detail.recherche">Recherche starten</label>
             <label index="tx_libconnect.dbis.detail.remarks">Weitere Bemerkungen:</label>
             <label index="tx_libconnect.dbis.detail.report_periods">Berichtszeitraum:</label>
             <label index="tx_libconnect.dbis.detail.subjects">Fachgebiete:</label>
             <label index="tx_libconnect.dbis.detail.update">Erscheinungsweise:</label>
-<<<<<<< HEAD
             <label index="tx_libconnect.dbis.detail.back">Zurück</label>
-=======
             <label index="tx_libconnect.dbis.detail.notavailable_start">Diese Datenbank ist für die</label>
             <label index="tx_libconnect.dbis.detail.notavailable_end">nicht verfügbar.</label>
             <label index="tx_libconnect.dbis.detail.library_with_title">Bibliothek(en) mit Bestandsnachweis:</label>
->>>>>>> refs/remotes/subhh/master
 
             <label index="tx_libconnect.dbis.form.access_type">Zugangsart</label>
             <label index="tx_libconnect.dbis.form.datbase_types">Datenbank-Typen</label>
@@ -265,7 +259,7 @@
             <label index="tx_libconnect.dbis.list.headline.subject">Fachgebiet</label>
             <label index="tx_libconnect.dbis.list.legend.headline">Legende</label>
             <label index="tx_libconnect.dbis.list.topdatabases">Top-Datenbanken</label>
-                                                                    
+
             <label index="tx_libconnect.dbis.miniform.link.sort">Sortieren nach:</label>
             <label index="tx_libconnect.dbis.miniform.sort_type">Datenbanktyp</label>
             <label index="tx_libconnect.dbis.miniform.sort_alph">Name</label>
@@ -296,7 +290,7 @@
 
             <!-- EZB -->
 
-            <label index="tx_libconnect.ezb.articipants.categories">2. Kategorien:</label>            
+            <label index="tx_libconnect.ezb.articipants.categories">2. Kategorien:</label>
             <label index="tx_libconnect.ezb.articipants.countries">1. Länder:</label>
             <label index="tx_libconnect.ezb.articipants.infotext">Folgende an der Elektronischen Zeitschriftenbibliothek beteiligten Einrichtungen bieten ihren Benutzern Zugriff auf die Volltexte der Zeitschrift.</label>
             <label index="tx_libconnect.ezb.articipants.participants">3. Wählen Sie die Einrichtung aus:</label>
@@ -318,7 +312,7 @@
             <label index="tx_libconnect.ezb.detail.movingwall.end.i.more">Ausgaben</label>
             <label index="tx_libconnect.ezb.detail.movingwall.end.i.one">Ausgabe</label>
             <label index="tx_libconnect.ezb.detail.movingwall.end.d.more">Tage</label>
-            <label index="tx_libconnect.ezb.detail.movingwall.end.d.one">Tag</label>            
+            <label index="tx_libconnect.ezb.detail.movingwall.end.d.one">Tag</label>
             <label index="tx_libconnect.ezb.detail.movingwall.end.m.more">Monate</label>
             <label index="tx_libconnect.ezb.detail.movingwall.end.m.one">Monat</label>
             <label index="tx_libconnect.ezb.detail.movingwall.end.v.more">Bände</label>
