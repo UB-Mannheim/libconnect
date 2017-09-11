@@ -6,7 +6,7 @@
 <ul class="dbis-list">
 <f:for each="{list}" as="item">
     <li>
-        <a href="{item.link}"><f:format.htmlentitiesDecode>{item.title}</f:format.htmlentitiesDecode></a> ({item.count})
+        <a href="{item.link}" rel="nofollow"><f:format.htmlentitiesDecode>{item.title}</f:format.htmlentitiesDecode></a> ({item.count})
     </li>
 </f:for>
 </ul>
