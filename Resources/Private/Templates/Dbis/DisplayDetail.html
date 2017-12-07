@@ -20,7 +20,7 @@
         </f:comment>
 
         <h2 class="libconnect-h2"><f:format.htmlentitiesDecode>{db.title}</f:format.htmlentitiesDecode></h2>
-        
+
         <f:if condition="<f:count subject='{db.biblist}' /> > 0">
         <div id="dbis-detail-notavailable">
             <p><f:translate key="LLL:EXT:libconnect/Resources/Private/Language/locallang.xml:tx_libconnect.dbis.detail.notavailable_start" /> <f:format.htmlentitiesDecode>{db.library.name}</f:format.htmlentitiesDecode> <f:translate key="LLL:EXT:libconnect/Resources/Private/Language/locallang.xml:tx_libconnect.dbis.detail.notavailable_end" /><br/>
@@ -36,7 +36,7 @@
             </form>
         </div>
         </f:if>
-        
+
         <f:if condition="{db.access_workaround}">
             <f:if condition="{db.access.href}">
                 <p>
@@ -110,7 +110,7 @@
                                 </td>
                             </tr>
                         </f:if>
-                        
+
                         <f:if condition="{libconnect:compare(a: accesstype, b: 'lic')}">
                             <tr class="dbis-alic">
                                 <th>

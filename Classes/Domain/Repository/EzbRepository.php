@@ -44,17 +44,17 @@ Class EzbRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
     private $longAccessInfos = array();
 
     /**
-	 * ezbRepository
-	 *
-	 * @var \Sub\Libconnect\Domain\Repository\SubjectRepository
-	 * @inject
-	 */
-	protected $subjectRepository;
+     * subjectRepository
+     *
+     * @var \Sub\Libconnect\Domain\Repository\SubjectRepository
+     * @inject
+     */
+    protected $subjectRepository;
     
     /**
      * get list for start page
      * 
-     * @return array
+     * @return array $list
      */
     public function loadOverview() {
         $this->loadSubjects();
@@ -79,12 +79,12 @@ Class EzbRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
      * fill variable $ezb_to_t3_subjects with list of subjects
      */
     private function loadSubjects() {
-        $objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
-        $repository = $objectManager->get('Sub\\Libconnect\\Domain\\Repository\\SubjectRepository');
-        $res =  $repository->findAll();
+        //$objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
+        //$repository = $objectManager->get('Sub\\Libconnect\\Domain\\Repository\\SubjectRepository');
+
+        $res =  $this->subjectRepository->findAll();
 
         foreach($res as $row){
-            
             $this->ezb_to_t3_subjects[$row->getEzbnotation()]['ezbnotation'] = $row->getEzbnotation();
             $this->ezb_to_t3_subjects[$row->getEzbnotation()]['title'] = $row->getTitle();
             $this->ezb_to_t3_subjects[$row->getEzbnotation()]['uid'] = $row->getUid();
@@ -93,6 +93,7 @@ Class EzbRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
             $this->t3_to_ezb_subjects[$row->getUid()]['ezbnotation'] = $row->getEzbnotation();
             $this->t3_to_ezb_subjects[$row->getUid()]['title'] = $row->getTitle();
         }
+
     }
     
     /**
@@ -101,6 +102,7 @@ Class EzbRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
      * @param int $subject_id
      * @param array $options
      * @param array $config
+     *
      * @return array
      */
     public function loadList($subject_id, $options = array('index' =>0, 'sc' => 'A', 'lc' => ''), $config) {
@@ -152,7 +154,7 @@ Class EzbRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
                     'libconnect[sc]' => $journals['navlist']['pages'][$page]['sc']? $journals['navlist']['pages'][$page]['sc'] : 'A',
                     'libconnect[lc]' => $journals['navlist']['pages'][$page]['lc'],
                     'libconnect[notation]' => $subject['ezbnotation'],
-                    'libconnect[colors]' => array_flip($journals['colors'])
+                    'libconnect[colors]' => $journals['colors']
                 ));
             }
         }
@@ -166,7 +168,7 @@ Class EzbRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
                         'libconnect[sc]' => $journals['alphabetical_order']['first_fifty'][$section]['sc']? $journals['alphabetical_order']['first_fifty'][$section]['sc'] : 'A',
                         'libconnect[lc]' => $journals['alphabetical_order']['first_fifty'][$section]['lc'],
                         'libconnect[notation]' => $subject['ezbnotation'],
-                        'libconnect[colors]' => array_flip($journals['colors'])
+                        'libconnect[colors]' => $journals['colors']
                 ));
             }
         }
@@ -189,7 +191,7 @@ Class EzbRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
                         'libconnect[sc]' => $journals['alphabetical_order']['next_fifty'][$section]['sc']? $journals['alphabetical_order']['next_fifty'][$section]['sc'] : 'A',
                         'libconnect[lc]' => $journals['alphabetical_order']['next_fifty'][$section]['lc'],
                         'libconnect[notation]' => $subject['ezbnotation'],
-                        'libconnect[colors]' => array_flip($journals['colors'])
+                        'libconnect[colors]' => $journals['colors']
                 ));
             }
         }
@@ -202,6 +204,7 @@ Class EzbRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
      * 
      * @param type $journalId
      * @param type $config
+     *
      * @return boolean
      */
     public function loadDetail($journalId, $config) {
@@ -271,6 +274,20 @@ Class EzbRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
             }
         }
 
+        //http://rzblx1.uni-regensburg.de/ezeit/searchres.phtml?bibid=SUBHH&colors=7&lang=de&jq_type1=KW&jq_term1=Radiologie
+        //creates links of keywords 
+        $tempKeywords = array();
+        foreach( $journal['keywords'] as $keyword ){
+            $temp[] = $GLOBALS['TSFE']->cObj->getTypoLink(
+                            $keyword, 
+                            10, 
+                            array(
+                                'libconnect[search][jq_term1]' =>  $keyword,
+                                'libconnect[search][jq_type1]' => 'KW'
+                            ));
+        }
+        $journal['keywords_join'] = join(', ', $tempKeywords);
+        
         return $journal;
     }
     
@@ -279,9 +296,10 @@ Class EzbRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
      * 
      * @param array $searchVars
      * @param array $config
+     *
      * @return array $journals
      */
-    public function loadSearch($searchVars, $options, $config) {
+    public function loadSearch($searchVars, $colors, $config) {
         $this->loadSubjects();
 
         //search of sidebar
@@ -299,8 +317,8 @@ Class EzbRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
         $ezb =  \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Tx_libconnect_Resources_Private_Lib_Ezb');
 
         //filter list by access list
-        $colors = $this->getColors($searchVars['selected_colors']);
-        $ezb->setColors($colors);
+        $ezbColors = $this->getColors($colors);
+        $ezb->setColors($ezbColors);
 
         $journals = $ezb->search($term, $searchVars);
 
@@ -309,7 +327,7 @@ Class EzbRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
         }
 
         $journals['searchDescription'] = $this->getSearchDescription($searchVars);
-        $journals['selected_colors'] = $searchVars['selected_colors'];
+        $journals['selected_colors'] = $colors;
     
         /**
          * create links
@@ -322,8 +340,7 @@ Class EzbRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
                     $journals['navlist']['pages'][$page]['link'] = $GLOBALS['TSFE']->cObj->getTypolink_URL($GLOBALS['TSFE']->id,
                         array_merge($linkParams, array(
                             'libconnect[search][sc]' => $journals['navlist']['pages'][$page]['id'],
-                            'libconnect[search][selected_colors]' => $journals['selected_colors'],
-                            'libconnect[search][colors]' => $colors
+                            'libconnect[search][selected_colors]' => $journals['selected_colors']
                         )));
                 }
             }
@@ -376,8 +393,7 @@ Class EzbRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
                     array_merge($linkParams, array(
                         'libconnect[search][sindex]' => $journals['alphabetical_order']['next_fifty'][$section]['sindex'],
                         'libconnect[search][sc]' => $journals['alphabetical_order']['next_fifty'][$section]['sc'],
-                        'libconnect[search][selected_colors]' => $journals['selected_colors'],
-                        'libconnect[search][colors]' => $colors
+                        'libconnect[search][selected_colors]' => $journals['selected_colors']
                     )));
             }
         }
@@ -523,6 +539,7 @@ Class EzbRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
      * get data about the search
      * 
      * @param array $searchVars
+     *
      * @return array
      */
     private function getSearchDescription($searchVars){
@@ -620,6 +637,7 @@ Class EzbRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
      * returns a value for parameter colors. 
      * 
      * @param array $colors
+     *
      * @return array $sum
      */
     private function getColors($colors){

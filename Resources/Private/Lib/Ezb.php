@@ -32,14 +32,15 @@
  * @package libconnect
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  *
- * Doku: http://www.bibliothek.uni-regensburg.de/ezeit/vascoda/vifa/doku_xml_ezb.html
- * Doku: http://rzblx1.uni-regensburg.de/ezeit/vascoda/vifa/doku_xml_ezb.html
+ * documentation: http://www.bibliothek.uni-regensburg.de/ezeit/vascoda/vifa/doku_xml_ezb.html
+ * documentation: http://rzblx1.uni-regensburg.de/ezeit/vascoda/vifa/doku_xml_ezb.html
  * @author niklas guenther
  * @author Torsten Witt
  *
  */
 
 require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('libconnect') . 'Resources/Private/Lib/Xmlpageconnection.php');
+require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('libconnect') . 'Resources/Private/Lib/Httppageconnection.php');
 
 class Tx_libconnect_Resources_Private_Lib_Ezb {
 
@@ -90,8 +91,7 @@ class Tx_libconnect_Resources_Private_Lib_Ezb {
         'ZD' => 'ZDB-Nummer');
 
     /**
-     * construtor
-     *
+     * constructor
      */
     public function __construct() {
         $this->XMLPageConnection = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_libconnect_resources_private_lib_xmlpageconnection');
@@ -103,7 +103,6 @@ class Tx_libconnect_Resources_Private_Lib_Ezb {
 
     /**
      * sets ID of the library
-     *
      */
     private function setBibID() {
 		$this->bibID = $GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_libconnect.']['ezbbibid'];
@@ -270,7 +269,7 @@ class Tx_libconnect_Resources_Private_Lib_Ezb {
                 $journal['keywords'][] = (string) $keyword;
             }
         }
-        $journal['keywords_join'] = join(', ', $journal['keywords']);
+
         $journal['fulltext'] = (string) $xml_request->ezb_detail_about_journal->journal->detail->fulltext;
 
         if (isset($xml_request->ezb_detail_about_journal->journal->detail->fulltext)) {
@@ -349,6 +348,8 @@ class Tx_libconnect_Resources_Private_Lib_Ezb {
                 );
             }
         }
+        
+        $journal['moreDetails'] = $this->getMoreDetails($journalId);
 
         return $journal;
     }
@@ -425,7 +426,7 @@ class Tx_libconnect_Resources_Private_Lib_Ezb {
     }
 
     /**
-     * seach
+     * search
      *
      * @param string Suchstring
      *
@@ -580,6 +581,7 @@ class Tx_libconnect_Resources_Private_Lib_Ezb {
      * returns list where journal at partners available
      * 
      * @param type $jour_id
+     *
      * @return array full list of Partner with Journal
      */
     public function getParticipantsList($jour_id){
@@ -634,6 +636,7 @@ class Tx_libconnect_Resources_Private_Lib_Ezb {
      * checks institutions having access to this journal
      * 
      * @param type $jour_id
+     *
      * @return boolean
      */
     public function getParticipants($jour_id){
@@ -684,6 +687,7 @@ class Tx_libconnect_Resources_Private_Lib_Ezb {
      * sets the movin wall
      * 
      * @param string $value
+     *
      * @return array
      */
     private function getMovingwall($value){
@@ -721,6 +725,40 @@ class Tx_libconnect_Resources_Private_Lib_Ezb {
         }
 
         $this->lang = $lang;
+    }
+    
+    
+    /**
+     * get some inforemation from the HTML page
+     *
+     * @param integer
+     *
+     * @return array
+     */
+    private function getMoreDetails($journalId){
+        $HttpPageConnection = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_libconnect_resources_private_lib_httppageconnection');
+        $url = 'https://rzblx1.uni-regensburg.de/ezeit/detail.phtml?colors=' . '&jour_id=' . $journalId . '&bibid='. $this->bibID . '&lang=' . $this->lang;
+        $HttpRequestData = $HttpPageConnection->getDataFromHttpPage($url);
+        
+        $moreDetails = array();
+
+        //"Preistyp Anmerkung"
+        $start = mb_stripos($HttpRequestData, "Preistyp Anmerkung:");
+        if($this->lang == "en"){
+            $start = mb_stripos($HttpRequestData, "Pricetype annotation:");
+        }
+        if($start){
+            $stop = mb_stripos($HttpRequestData, "<br />", $start);
+            $price_type_annotation = trim(mb_substr($HttpRequestData, $start, $stop-$start-5));
+            $price_type_annotation = str_replace("</dt>", "", $price_type_annotation);
+            $price_type_annotation = str_replace("<br />", "", $price_type_annotation);
+            $price_type_annotation = str_replace(":", "", $price_type_annotation);
+            $price_type_annotation = str_replace("<dd class=\"defListContentDefinition\">", "", $price_type_annotation);
+            $price_type_annotation = utf8_encode(trim($price_type_annotation));
+        }
+        $moreDetails['price_type_annotation'] = $price_type_annotation;
+        
+        return $moreDetails;
     }
 }
 ?>

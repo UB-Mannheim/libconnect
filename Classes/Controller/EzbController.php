@@ -38,29 +38,51 @@ namespace Sub\Libconnect\Controller;
 class EzbController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController  {
 
     /**
-	 * creates instance of EzbRepository
-	 *
-	 * @var \Sub\Libconnect\Domain\Repository\EzbRepository
-	 * @inject
-	 */
-	protected $ezbRepository;
+     * creates instance of EzbRepository
+     *
+     * @var \Sub\Libconnect\Domain\Repository\EzbRepository
+     * @inject
+     */
+    protected $ezbRepository;
+
+    /**
+     * creates instance of SubjectRepository
+     *
+     * @var \Sub\Libconnect\Domain\Repository\SubjectRepository
+     * @inject
+     */
+    protected $subjectRepository;
     
+    /**
+     * Inject a subject repository
+     *
+     * @param \Sub\Libconnect\Domain\Repository\SubjectRepository $subjectRepository
+     */
+    public function injectSubjectRepository(\Sub\Libconnect\Domain\Repository\SubjectRepository $subjectRepository) {
+        $this->subjectRepository = $subjectRepository;
+    }
+
      /**
      * shows a list of journals (for general, search, choosed subject)
      */
     public function displayListAction() {
-        if(!empty(\TYPO3\CMS\Core\Utility\GeneralUtility::_GET('tx_libconnect_ezb'))){
-            $params = \TYPO3\CMS\Core\Utility\GeneralUtility::_GET('tx_libconnect_ezb');
-        } else{
-            $params = \TYPO3\CMS\Core\Utility\GeneralUtility::_GET('libconnect');
+        $params = array();
+        if(!empty(\TYPO3\CMS\Core\Utility\GeneralUtility::_GPmerged('tx_libconnect_ezb'))){
+            $params_temp = \TYPO3\CMS\Core\Utility\GeneralUtility::_GPmerged('tx_libconnect_ezb');
+            $params = $params_temp['libconnect'];
+        } 
+        if(!empty(\TYPO3\CMS\Core\Utility\GeneralUtility::_GPmerged('libconnect'))){
+            $params_temp = \TYPO3\CMS\Core\Utility\GeneralUtility::_GPmerged('libconnect');
+            $params = array_merge($params_temp, $params);
         }
 
         //get PageID
         $Pid = intval($GLOBALS['TSFE']->id);
+        $this->view->assign('pageUid', $Pid);
         
         //include CSS
         $this->decideIncludeCSS();
-
+ 
         if ((!empty($params['subject'])) || (!empty($params['notation']))) {//choosed subject after start point
 
             $config['detailPid'] = $this->settings['flexform']['detailPid'];
@@ -75,7 +97,7 @@ class EzbController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController  
             if(!isset($params['subject'])){
                 $params['subject'] = "";
             }
-            $liste =  $this->ezbRepository->loadList(
+            $journals =  $this->ezbRepository->loadList(
                 $params['subject'], 
                 $options,
                 $config
@@ -91,12 +113,25 @@ class EzbController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController  
             );
 
             // no readable URL?
-            // its different to seach results, because of different templates
+            // its different to search results, because of different templates
             /*if(!empty(\TYPO3\CMS\Core\Utility\GeneralUtility::_GET('id'))){
                 $formParameter['id'] = $Pid;
             }*/
-            //variables for template
-            $this->view->assign('journals', $liste);
+
+            if( empty($params['colors'][1]) &
+                empty($params['colors'][2]) &
+                empty($params['colors'][4])){
+			
+                    $params['colors'] = array(
+                        1 => 1,
+                        2 => 2,
+                        4 => 4,
+                        6 => 6
+                    );
+            }
+
+            //variables for template            
+            $this->view->assign('journals', $journals);
             $this->view->assign('listUrl', $listURL);
             $this->view->assign('colors', $params['colors']);
             $this->view->assign('formParameter', $formParameter);
@@ -107,24 +142,32 @@ class EzbController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController  
 
             $journals = array();
  
-            if(empty($params['search']['selected_colors'])){
-                $params['search']['selected_colors'] = array(
-                    1 => 1,
-                    2 => 2,
-                    4 => 4,
-                    6 => 6
-                );
+            //params form link
+            if(!empty($params['search']['selected_colors'])){
+                        $params['colors'] = 	$params['search']['selected_colors'];
             }
             
+            //params from color legend
+            if( empty($params['colors'][1]) &
+                empty($params['colors'][2]) &
+                empty($params['colors'][4])){
+			
+                    $params['colors'] = array(
+                        1 => 1,
+                        2 => 2,
+                        4 => 4
+                    );
+            }
+
             //no readable URL?
             /*if(!empty(\TYPO3\CMS\Core\Utility\GeneralUtility::_GET('id'))){
                 $this->view->assign('formParameterId', $Pid);
             }*/
             
-            $journals =  $this->ezbRepository->loadSearch($params['search'], $journals['colors'], $config);           
+            $journals =  $this->ezbRepository->loadSearch($params['search'], $params['colors'], $config);           
 
             if(!empty($params['search']['selected_colors'])){
-                //damit selected_colors nicht in verstekten Formularfeldern auftauchen
+                //delete selected_colors in hidden form fields
                 unset($params['search']['selected_colors']);
             }
 
@@ -133,6 +176,7 @@ class EzbController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController  
             $controllerContext->getRequest()->setControllerActionName('displaySearch');
             $this->view->setControllerContext($controllerContext);
             
+            //sets the link to the page with list plugin
             $listURL = $GLOBALS['TSFE']->cObj->getTypolink_URL( $Pid );
             
             //variables for template
@@ -143,7 +187,7 @@ class EzbController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController  
 
         } else {//start point
             
-            $liste =  $this->ezbRepository->loadOverview();
+            $journals =  $this->ezbRepository->loadOverview();
 
             //change view
             $controllerContext = $this->buildControllerContext();
@@ -151,7 +195,7 @@ class EzbController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController  
             $this->view->setControllerContext($controllerContext);
 
             //variables for template
-            $this->view->assign('list', $liste);
+            $this->view->assign('list', $journals);
         }
     }
 
@@ -159,10 +203,10 @@ class EzbController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController  
      * shows details
      */
     public function displayDetailAction() {
-        if(!empty(\TYPO3\CMS\Core\Utility\GeneralUtility::_GET('tx_libconnect_ezb'))){
-            $params = \TYPO3\CMS\Core\Utility\GeneralUtility::_GET('tx_libconnect_ezb');
+        if(!empty(\TYPO3\CMS\Core\Utility\GeneralUtility::_GPmerged('tx_libconnect_ezb'))){
+            $params = \TYPO3\CMS\Core\Utility\GeneralUtility::_GPmerged('tx_libconnect_ezb');
         } else{
-            $params = \TYPO3\CMS\Core\Utility\GeneralUtility::_GET('libconnect');
+            $params = \TYPO3\CMS\Core\Utility\GeneralUtility::_GPmerged('libconnect');
         }
         $config['participantsPid'] = $this->settings['flexform']['participantsPid'];
         $config['listPid'] = $this->settings['flexform']['listPid'];
@@ -201,10 +245,14 @@ class EzbController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController  
      * shows sidebar
      */
     public function displayMiniFormAction() {
-        if(!empty(\TYPO3\CMS\Core\Utility\GeneralUtility::_GET('tx_libconnect_ezb'))){
-            $params = \TYPO3\CMS\Core\Utility\GeneralUtility::_GET('tx_libconnect_ezb');
-        } else{
-            $params = \TYPO3\CMS\Core\Utility\GeneralUtility::_GET('libconnect');
+        $params = array();
+        if(!empty(\TYPO3\CMS\Core\Utility\GeneralUtility::_GPmerged('tx_libconnect_ezb'))){
+            $params_temp = \TYPO3\CMS\Core\Utility\GeneralUtility::_GPmerged('tx_libconnect_ezb');
+            $params = $params_temp['libconnect'];
+        } 
+        if(!empty(\TYPO3\CMS\Core\Utility\GeneralUtility::_GPmerged('libconnect'))){
+            $params_temp = \TYPO3\CMS\Core\Utility\GeneralUtility::_GPmerged('libconnect');
+            $params = array_merge($params_temp, $params);
         }
 
         //include CSS
@@ -234,6 +282,14 @@ class EzbController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController  
                         $this->view->assign('newUrlSub', $GLOBALS['TSFE']->cObj->getTypolink_URL( intval($this->settings['flexform']['newPid']), 
                             array('libconnect' => array('subject' => $params['subject'] )) ) );//URL of new list
                     }
+                }else{
+                    $count = (int) $this->getNewCount(FALSE);
+
+                    //show "new in EZB" only if there is something new
+                    if($count >0){
+                        $this->view->assign('newUrl', $GLOBALS['TSFE']->cObj->getTypolink_URL( intval($this->settings['flexform']['newPid'])) );
+                        $this->view->assign('newInSubjectCount',  $count);
+                    }
                 }
             }
 
@@ -249,13 +305,13 @@ class EzbController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController  
     }
 
     /**
-     * show the seach form
+     * show the search form
      */
     public function displayFormAction() {
-        if(!empty(\TYPO3\CMS\Core\Utility\GeneralUtility::_GET('tx_libconnect_ezb'))){
-            $params = \TYPO3\CMS\Core\Utility\GeneralUtility::_GET('tx_libconnect_ezb');
+        if(!empty(\TYPO3\CMS\Core\Utility\GeneralUtility::_GPmerged('tx_libconnect_ezb'))){
+            $params = \TYPO3\CMS\Core\Utility\GeneralUtility::_GPmerged('tx_libconnect_ezb');
         } else{
-            $params = \TYPO3\CMS\Core\Utility\GeneralUtility::_GET('libconnect');
+            $params = \TYPO3\CMS\Core\Utility\GeneralUtility::_GPmerged('libconnect');
         }
 
         //include CSS
@@ -275,11 +331,16 @@ class EzbController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController  
      * shows list of new entries
      */
     public function displayNewAction() {
-        if(!empty(\TYPO3\CMS\Core\Utility\GeneralUtility::_GET('tx_libconnect_ezb'))){
-            $params = \TYPO3\CMS\Core\Utility\GeneralUtility::_GET('tx_libconnect_ezb');
-        } else{
-            $params = \TYPO3\CMS\Core\Utility\GeneralUtility::_GET('libconnect');
+        $params = array();
+        if(!empty(\TYPO3\CMS\Core\Utility\GeneralUtility::_GPmerged('tx_libconnect_ezb'))){
+            $params_temp = \TYPO3\CMS\Core\Utility\GeneralUtility::_GPmerged('tx_libconnect_ezb');
+            $params = $params_temp['libconnect'];
+        } 
+        if(!empty(\TYPO3\CMS\Core\Utility\GeneralUtility::_GPmerged('libconnect'))){
+            $params_temp = \TYPO3\CMS\Core\Utility\GeneralUtility::_GPmerged('libconnect');
+            $params = array_merge($params_temp, $params);
         }
+
         $params['jq_type1'] = 'ID';
         $params['sc'] = $params['search']['sc'];
         if(!empty($params['subject'])){
@@ -318,13 +379,20 @@ class EzbController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController  
 
     /**
      * count the new entries
+     * 
+     * @return array $journals
      */
     public function getNewCount($subjectId = FALSE) {
-        if(!empty(\TYPO3\CMS\Core\Utility\GeneralUtility::_GET('tx_libconnect_ezb'))){
-            $params = \TYPO3\CMS\Core\Utility\GeneralUtility::_GET('tx_libconnect_ezb');
-        } else{
-            $params = \TYPO3\CMS\Core\Utility\GeneralUtility::_GET('libconnect');
+        $params = array();
+        if(!empty(\TYPO3\CMS\Core\Utility\GeneralUtility::_GPmerged('tx_libconnect_ezb'))){
+            $params_temp = \TYPO3\CMS\Core\Utility\GeneralUtility::_GPmerged('tx_libconnect_ezb');
+            $params = $params_temp['libconnect'];
+        } 
+        if(!empty(\TYPO3\CMS\Core\Utility\GeneralUtility::_GPmerged('libconnect'))){
+            $params_temp = \TYPO3\CMS\Core\Utility\GeneralUtility::_GPmerged('libconnect');
+            $params = array_merge($params_temp, $params);
         }
+
         $params['jq_type1'] = 'ID';
         $params['sc'] = $params['search']['sc'];
 
@@ -347,13 +415,13 @@ class EzbController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController  
     }
 
     /**
-     * genrates Form for the participants
+     * generates form for the participants
      */
     public function displayParticipantsFormAction() {
-        if(!empty(\TYPO3\CMS\Core\Utility\GeneralUtility::_GET('tx_libconnect_ezb'))){
-            $params = \TYPO3\CMS\Core\Utility\GeneralUtility::_GET('tx_libconnect_ezb');
+        if(!empty(\TYPO3\CMS\Core\Utility\GeneralUtility::_GPmerged('tx_libconnect_ezb'))){
+            $params = \TYPO3\CMS\Core\Utility\GeneralUtility::_GPmerged('tx_libconnect_ezb');
         } else{
-            $params = \TYPO3\CMS\Core\Utility\GeneralUtility::_GET('libconnect');
+            $params = \TYPO3\CMS\Core\Utility\GeneralUtility::_GPmerged('libconnect');
         }
         //include CSS
         $this->decideIncludeCSS();

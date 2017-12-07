@@ -8,9 +8,9 @@
 </f:if>
 
 <f:if condition="{journals.subject}">
-    <h1>
+    <h2>
         <f:format.htmlentitiesDecode>{journals.subject}</f:format.htmlentitiesDecode>
-    </h1>
+    </h2>
 </f:if>
 
 <div class="ezb-list-legend">
@@ -46,11 +46,9 @@
 <br/><br/>
 
 <p>
-    <libconnect:strreplace search="%s" replace=" {journals.page_vars.search_count} ">
-        <f:translate key="LLL:EXT:libconnect/Resources/Private/Language/locallang.xml:tx_libconnect.ezb.new.since" />
-        <span class="ezb-newdate">{new_date}</span>
-        <f:translate key="LLL:EXT:libconnect/Resources/Private/Language/locallang.xml:tx_libconnect.ezb.new.hits" />
-    </libconnect:strreplace>
+    <f:translate key="LLL:EXT:libconnect/Resources/Private/Language/locallang.xml:tx_libconnect.ezb.new.since" />
+    <span class="ezb-newdate">{new_date}</span> {journals.page_vars.search_count}
+    <f:translate key="LLL:EXT:libconnect/Resources/Private/Language/locallang.xml:tx_libconnect.ezb.new.hits" />
 </p>
 
 <br/>
@@ -74,7 +72,7 @@
 
 <br/>
 
-<f:flashMessages renderMode="div" />
+<f:flashMessages />
 
 <div class="ezb-list-output">
     <f:for each="{journals.alphabetical_order.first_fifty}" as="section">

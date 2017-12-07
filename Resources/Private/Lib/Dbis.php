@@ -32,7 +32,6 @@
  * @package libconnect
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  *
- * Doku:
  * @author niklas guenther
  * @author Torsten Witt
  *
@@ -63,8 +62,7 @@ class Tx_Libconnect_Resources_Private_Lib_Dbis {
     private $HttpPageConnection;
 
     /**
-     * construtor
-     *
+     * constructor
      */
     public function __construct() {
         $this->XMLPageConnection = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_libconnect_resources_private_lib_xmlpageconnection');
@@ -74,7 +72,6 @@ class Tx_Libconnect_Resources_Private_Lib_Dbis {
 
     /**
      * sets ID of the library
-     *
      */
     public function setBibID() {
         $this->bibID = $GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_libconnect.']['dbisbibid'];
@@ -118,7 +115,6 @@ class Tx_Libconnect_Resources_Private_Lib_Dbis {
 
     /**
      * Set the array with unused licences
-     *
      */
     public function setLicenceForbid() {
         $this->licenceForbid = $GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_libconnect.']['settings.']['dbislicenceforbid.'];
@@ -367,6 +363,8 @@ class Tx_Libconnect_Resources_Private_Lib_Dbis {
                     $details['access_icon'] = (string) $value->attributes()->access_icon;
                     $details['db_access'] = (string) $value->db_access;
                     $details['db_access_short_text'] = (string) $value->db_access_short_text;
+                    
+                //check has library access and who else
                 } else if ($key == 'biblist') {
 
                     //libraries with access to the title
@@ -434,6 +432,7 @@ class Tx_Libconnect_Resources_Private_Lib_Dbis {
         //$url = 'http://rzblx10.uni-regensburg.de/dbinfo/detail.php?bib_id='.$this->bibID.'&colors=&ocolors=&lett=fs&tid=0&titel_id='. $db_id;
 
         //$details['more_internet_accesses'] = $this->HttpPageConnection->getDataFromHttpPage($url);
+        //$details['moreDetails'] = $this->getMoreDetails($db_id);
 
         return $details;
     }
@@ -448,7 +447,7 @@ class Tx_Libconnect_Resources_Private_Lib_Dbis {
         $url =  $this->db_detail_suche_url. $this->bibID .'&colors='. $this->colors .'&ocolors='.$this->ocolors;
         $xml_such_form = $this->XMLPageConnection->getDataFromXMLPage($url);
 
-        //Zugaenge werden ermittelt
+        //get access list
         if (isset($xml_such_form->dbis_search->option_list)) {
             foreach ($xml_such_form->dbis_search->option_list AS $key => $value) {
                 foreach ($value->option AS $key2 => $value2) {
@@ -457,7 +456,7 @@ class Tx_Libconnect_Resources_Private_Lib_Dbis {
             }
         }
 
-        //zu sperrende Zugaenge auslesen und aus Gesamtmenge entfernen
+        //delete inadvertent accesses
         $this->setLicenceForbid();
         if((!empty($this->licenceForbid)) && ($this->licenceForbid!= FALSE)){
             foreach($this->licenceForbid as $key =>$licence){
@@ -634,6 +633,7 @@ class Tx_Libconnect_Resources_Private_Lib_Dbis {
      * helper function get fachliste
      *
      * @param string $request
+     *
      * @return array
      */
     public function getRequestFachliste($request) {
@@ -655,6 +655,32 @@ class Tx_Libconnect_Resources_Private_Lib_Dbis {
         $xml_request = $this->XMLPageConnection->getDataFromXMLPage($url);
 
         return $xml_request;
+    }
+    
+    /**
+     * get some inforemation from the HTML page
+     * @param integer
+     *
+     * @return array
+     */
+    private function getMoreDetails($db_id){
+        $HttpPageConnection = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_libconnect_resources_private_lib_httppageconnection');
+        $url = 'https://rzblx10.uni-regensburg.de/dbinfo/detail.php?bib_id='.$this->bibID.'&colors=&ocolors=&lett=fs&tid=0&titel_id='. $db_id;
+        $HttpRequestData = $HttpPageConnection->getDataFromHttpPage($url);
+        
+        $moreDetails = array();
+
+        //detail_content_more_internet_accesses
+        $start = mb_stripos($HttpRequestData, "detail_content_more_internet_accesses");
+        if($start){
+            $stop = mb_stripos($HttpRequestData, "</td>", $start);
+            $detail_content_more_internet_accesses = trim(mb_substr($HttpRequestData, $start, $stop-$start-5));
+            $detail_content_more_internet_accesses = str_replace("</td>", "", $detail_content_more_internet_accesses);
+            $detail_content_more_internet_accesses = utf8_encode(str_replace("_more_internet_accesses\">", "", $detail_content_more_internet_accesses));
+        }
+        $moreDetails['more_internet_accesses'] = $detail_content_more_internet_accesses;
+        
+        return $moreDetails;
     }
 }
 ?>

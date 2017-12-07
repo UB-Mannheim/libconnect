@@ -24,9 +24,9 @@
  ***************************************************************/
 
 /**
- * Doku: http://www.zeitschriftendatenbank.de/services/journals-online-print/
- * Doku: http://www.zeitschriftendatenbank.de/fileadmin/user_upload/ZDB/pdf/services/JOP_Spezifikation_XML-Dienst.pdf
- * Doku: http://www.zeitschriftendatenbank.de/fileadmin/user_upload/ZDB/pdf/services/JOP_Dokumentation_XML-Dienst.pdf
+ * documentation: http://www.zeitschriftendatenbank.de/services/journals-online-print/
+ * documentation: http://www.zeitschriftendatenbank.de/fileadmin/user_upload/ZDB/pdf/services/JOP_Spezifikation_XML-Dienst.pdf
+ * documentation: http://www.zeitschriftendatenbank.de/fileadmin/user_upload/ZDB/pdf/services/JOP_Dokumentation_XML-Dienst.pdf
  *
  */
 
@@ -49,20 +49,17 @@ class Tx_libconnect_Resources_Private_Lib_Zdb {
 
    /**
     * enable debug for logging errors to devLog
-    *
     */
     private $debug = FALSE;
 
    /**
     * Source-Identifier (sid – Vendor-ID:Database-ID) needs to be arranged with
     * the ZDB (contact: Mr. Rolschewski, mailto: johann.rolschewski@sbb.spk-berlin.de)
-    *
     */
     private $sid = NULL;
 
    /**
     * library authentication parameters to display correct availability
-    *
     */
     private $bibid = NULL;
     private $sigel = NULL;
@@ -78,7 +75,6 @@ class Tx_libconnect_Resources_Private_Lib_Zdb {
 
    /**
     * request URLs
-    *
     */    
     //private $briefformat_request_url = 'http://services.dnb.de/fize-service/gvr/brief.xml?';
     private $fullformat_request_url = 'http://services.dnb.de/fize-service/gvr/full.xml?';
@@ -88,7 +84,6 @@ class Tx_libconnect_Resources_Private_Lib_Zdb {
 
     /**
     * Class Constructor
-    *
     */    
     function __construct() {
 
@@ -139,7 +134,7 @@ class Tx_libconnect_Resources_Private_Lib_Zdb {
                                (!empty($this->isil) ? 'isil=' . $this->isil .'&' : '') .
                                (!empty($this->bik) ? 'bik=' . $this->bik : ''));
 
-        //remove last &(urlencode: %26) if existant (only if bik is empty but any other info above is given)
+        //remove last &(urlencode: %26) if existent (only if bik is empty but any other info above is given)
         if (strlen($this->pid) - 3 == strrpos($this->pid, '%26')) {
             $this->pid = substr($this->pid, 0, strlen($this->pid) - 3);
         }
@@ -221,7 +216,7 @@ class Tx_libconnect_Resources_Private_Lib_Zdb {
             if ($this->debug) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::devLog('invalid ResultList - URL: ' . $url, 'libconnect', 1);
             }
-var_dump($xml_request);
+
             return FALSE;
         }
 
@@ -336,7 +331,7 @@ var_dump($xml_request);
      */
     private function buildIconRequest($journalIdentifier, $genre){
 
-        return "https://services.d-nb.de/fize-service/gvr/icon?sid='.{$this->sid}" . (!empty($this->pid) ? "&pid={$this->pid}" : '' ) . $journalIdentifier . "&genre={$genre}";
+        return "https://services.dnb.de/fize-service/gvr/icon?sid='.{$this->sid}" . (!empty($this->pid) ? "&pid={$this->pid}" : '' ) . $journalIdentifier . "&genre={$genre}";
     }
 
     /**
@@ -347,7 +342,7 @@ var_dump($xml_request);
      */
     private function buildIconInfoUrl($journalIdentifier, $genre){
 
-        return "https://services.d-nb.de/fize-service/gvr/html-service.htm?sid={$this->sid}" . (!empty($this->pid) ? "&pid={$this->pid}" : '' ) . $journalIdentifier . "&genre={$genre}";
+        return "https://services.dnb.de/fize-service/gvr/html-service.htm?sid={$this->sid}" . (!empty($this->pid) ? "&pid={$this->pid}" : '' ) . $journalIdentifier . "&genre={$genre}";
     }
 
     /**
