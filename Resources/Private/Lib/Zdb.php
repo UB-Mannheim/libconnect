@@ -48,7 +48,7 @@
 class Tx_libconnect_Resources_Private_Lib_Zdb {
 
    /**
-    * Enable debug for logging errors to devLog
+    * enable debug for logging errors to devLog
     *
     */
     private $debug = FALSE;
@@ -80,8 +80,8 @@ class Tx_libconnect_Resources_Private_Lib_Zdb {
     * request URLs
     *
     */    
-    //private $briefformat_request_url = 'http://services.d-nb.de/fize-service/gvr/brief.xml?';
-    private $fullformat_request_url = 'https://services.d-nb.de/fize-service/gvr/full.xml?';
+    //private $briefformat_request_url = 'http://services.dnb.de/fize-service/gvr/brief.xml?';
+    private $fullformat_request_url = 'http://services.dnb.de/fize-service/gvr/full.xml?';
 
     // XML Data Object
     private $XMLPageConnection;    
@@ -103,7 +103,7 @@ class Tx_libconnect_Resources_Private_Lib_Zdb {
         $this->XMLPageConnection = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_libconnect_resources_private_lib_xmlpageconnection');
 
         if(!$this->getSid()) {
-            //todo: Fehlermeldung ausgeben
+            //todo: error message
             //error_log('typo3 extension libconnect - missing ZDB source-identifier: refer to documentation - chapter configuration.');
             if ($this->debug) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::devLog('invalid SID given: ' . $this->sid, 'libconnect', 1);
@@ -151,7 +151,7 @@ class Tx_libconnect_Resources_Private_Lib_Zdb {
     }
 
     /**
-    * Standortdetails zu einem Journal laden
+    * returns detail information of the position of a journal
     *
     * @param JournalIdentifier string
     * @param ZDBID string
@@ -221,7 +221,7 @@ class Tx_libconnect_Resources_Private_Lib_Zdb {
             if ($this->debug) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::devLog('invalid ResultList - URL: ' . $url, 'libconnect', 1);
             }
-
+var_dump($xml_request);
             return FALSE;
         }
 
