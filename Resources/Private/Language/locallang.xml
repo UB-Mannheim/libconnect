@@ -20,6 +20,7 @@
             <label index="tx_libconnect.dbis.detail.access.ppu">More Pay-per-Use Access:</label>
             <label index="tx_libconnect.dbis.detail.access.text">Availability:</label>
             <label index="tx_libconnect.dbis.detail.appearence">Form Of Appearance:</label>
+            <label index="tx_libconnect.dbis.detail.back">Back</label>
             <label index="tx_libconnect.dbis.detail.content">Contents:</label>
             <label index="tx_libconnect.dbis.detail.database">Database</label>
             <label index="tx_libconnect.dbis.detail.dbtype">Database Type:</label>
@@ -37,6 +38,7 @@
             <label index="tx_libconnect.dbis.detail.subjects">Subjects:</label>
             <label index="tx_libconnect.dbis.detail.update">Update:</label>
             <label index="tx_libconnect.dbis.detail.back">Back</label>
+
             <label index="tx_libconnect.dbis.detail.notavailable_start">This title is for the</label>
             <label index="tx_libconnect.dbis.detail.notavailable_end">not available.</label>
             <label index="tx_libconnect.dbis.detail.library_with_title">Library/ies with proofed stock:</label>
@@ -222,6 +224,7 @@
             <label index="tx_libconnect.dbis.detail.access.ppu">weitere Pay-per-Use Zugänge::</label>
             <label index="tx_libconnect.dbis.detail.access.text">Verfügbarkeit:</label>
             <label index="tx_libconnect.dbis.detail.appearence">Erscheinungsform:</label>
+            <label index="tx_libconnect.dbis.detail.back">Zurück</label>
             <label index="tx_libconnect.dbis.detail.content">Inhalte:</label>
             <label index="tx_libconnect.dbis.detail.database">Datenbank</label>
             <label index="tx_libconnect.dbis.detail.dbtype">Datenbank-Typ:</label>

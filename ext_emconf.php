@@ -15,39 +15,41 @@ $EM_CONF[$_EXTKEY] = array (
   'author' => 'Avonis New Media / SUB Hamburg',
   'author_email' => 'torsten.witt@sub.uni-hamburg.de',
   'author_company' => '',
-  'module' => '',
   'state' => 'stable',
-  'internal' => '',
-  'uploadfolder' => 0,
+  'uploadfolder' => true,
   'createDirs' => '',
   'clearCacheOnLoad' => 0,
-  'version' => '5.2.1',
-  'constraints' => 
+  'version' => '5.2.1 UBMA',
+  'constraints' =>
   array (
-    'depends' => 
+    'depends' =>
     array (
       'typo3' => '6.0.0-8.7.99',
       'cms' => '',
       'extbase' => '',
       'fluid' => '',
     ),
-    'conflicts' => 
+    'conflicts' =>
     array (
     ),
-    'suggests' => 
+    'suggests' =>
     array (
     ),
   ),
-  'autoload' => 
+  'autoload' =>
   array (
-    'psr-4' => 
+    'psr-4' =>
     array (
       'Sub\\Libconnect\\' => 'Classes/',
     ),
   ),
   '_md5_values_when_last_written' => 'a:0:{}',
   'comment' => 'Compatibility to TYPO3 8.7. EZB: New field "Preistyp Anmerkung".',
+  'suggests' =>
+  array (
+  ),
+  'conflicts' => '',
+  'comment' => 'Hotfix: dnb service links fixed.',
   'user' => 'subunihhdevteam',
+  'clearcacheonload' => true,
 );
-
-?>
