@@ -39,8 +39,10 @@
  *
  */
 
-require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('libconnect') . 'Resources/Private/Lib/Xmlpageconnection.php');
-require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('libconnect') . 'Resources/Private/Lib/Httppageconnection.php');
+if (!defined('TYPO3_COMPOSER_MODE') && defined('TYPO3_MODE')) {
+	require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('libconnect') . 'Resources/Private/Lib/Xmlpageconnection.php');
+	require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('libconnect') . 'Resources/Private/Lib/Httppageconnection.php');
+}
 
 class Tx_libconnect_Resources_Private_Lib_Ezb {
 
@@ -95,7 +97,7 @@ class Tx_libconnect_Resources_Private_Lib_Ezb {
      */
     public function __construct() {
         $this->XMLPageConnection = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_libconnect_resources_private_lib_xmlpageconnection');
-        
+
         //set configurations
         $this->setBibID();
         $this->setLanguage();
@@ -110,7 +112,7 @@ class Tx_libconnect_Resources_Private_Lib_Ezb {
 
     /**
      * returns the bibID
-     * 
+     *
      * @return string
      */
     public function getBibID() {
@@ -348,7 +350,7 @@ class Tx_libconnect_Resources_Private_Lib_Ezb {
                 );
             }
         }
-        
+
         $journal['moreDetails'] = $this->getMoreDetails($journalId);
 
         return $journal;
@@ -388,7 +390,7 @@ class Tx_libconnect_Resources_Private_Lib_Ezb {
 
             return $searchUrl;
         }else{
-            $searchUrl = $this->search_result_page . 'bibid=' . $this->bibID . '&colors=' . $this->colors . '&lang=' . $this->lang . 
+            $searchUrl = $this->search_result_page . 'bibid=' . $this->bibID . '&colors=' . $this->colors . '&lang=' . $this->lang .
                             '&xmlv=3';
         }
 
@@ -546,7 +548,7 @@ class Tx_libconnect_Resources_Private_Lib_Ezb {
 
     /**
      * retruns access information
-     * 
+     *
      * @return array $return
      */
     public function getShortAccessInfos(){
@@ -566,7 +568,7 @@ class Tx_libconnect_Resources_Private_Lib_Ezb {
 
     /**
      * returns more access information
-     * 
+     *
      * @return array $return
      */
     public function getLongAccessInfos(){
@@ -579,7 +581,7 @@ class Tx_libconnect_Resources_Private_Lib_Ezb {
 
     /**
      * returns list where journal at partners available
-     * 
+     *
      * @param type $jour_id
      *
      * @return array full list of Partner with Journal
@@ -594,16 +596,16 @@ class Tx_libconnect_Resources_Private_Lib_Ezb {
         }
 
         if ($participants_xml_request->ezb_where_journal_at_partners->partner_selection->countries->country){
-            foreach ($participants_xml_request->ezb_where_journal_at_partners->partner_selection->countries->country as $country){   
+            foreach ($participants_xml_request->ezb_where_journal_at_partners->partner_selection->countries->country as $country){
                 $participantsList['countries'][(string) $country->attributes()->ID] = (string) $country[0];
             }
 
-            foreach ($participants_xml_request->ezb_where_journal_at_partners->partner_selection->categories->category as $category){   
+            foreach ($participants_xml_request->ezb_where_journal_at_partners->partner_selection->categories->category as $category){
                 $participantsList['categories'][(string) $category->attributes()->ID]['countryrefs'] = (string)$category->attributes()->countryrefs;
                 $participantsList['categories'][(string) $category->attributes()->ID]['category_name'] = (string)$category->category_name;
             }
 
-            foreach ($participants_xml_request->ezb_where_journal_at_partners->partner_selection->institutions->institution  as $institution ){   
+            foreach ($participants_xml_request->ezb_where_journal_at_partners->partner_selection->institutions->institution  as $institution ){
                 $participantsList['institutions'][(string) $institution->attributes()->ID]['catrefs'] = (string)$institution->attributes()->catrefs;
                 $participantsList['institutions'][(string) $institution->attributes()->ID]['countryref'] = (string)$institution->attributes()->countryref;
                 $participantsList['institutions'][(string) $institution->attributes()->ID]['name'] = (string) $institution->name;
@@ -611,21 +613,21 @@ class Tx_libconnect_Resources_Private_Lib_Ezb {
             }
         }
 
-        return $participantsList; 
+        return $participantsList;
     }
 
     /**
      * set colors
-     * 
+     *
      * @param int $colors sum of colors
      */
     public function setColors($colors){
         $this->colors = $colors;
     }
-    
+
     /**
      * gets colors
-     * 
+     *
      * @param int $colors sum of colors
      */
     public function getColors(){
@@ -634,7 +636,7 @@ class Tx_libconnect_Resources_Private_Lib_Ezb {
 
     /**
      * checks institutions having access to this journal
-     * 
+     *
      * @param type $jour_id
      *
      * @return boolean
@@ -656,7 +658,7 @@ class Tx_libconnect_Resources_Private_Lib_Ezb {
 
     /**
      * returns detailview_request_url
-     * 
+     *
      * @return string
      */
     public function getDetailviewRequestUrl(){
@@ -682,10 +684,10 @@ class Tx_libconnect_Resources_Private_Lib_Ezb {
 
         return $contact;
     }
-    
+
     /**
      * sets the movin wall
-     * 
+     *
      * @param string $value
      *
      * @return array
@@ -726,8 +728,7 @@ class Tx_libconnect_Resources_Private_Lib_Ezb {
 
         $this->lang = $lang;
     }
-    
-    
+
     /**
      * get some inforemation from the HTML page
      *
@@ -737,27 +738,32 @@ class Tx_libconnect_Resources_Private_Lib_Ezb {
      */
     private function getMoreDetails($journalId){
         $HttpPageConnection = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_libconnect_resources_private_lib_httppageconnection');
-        $url = 'https://rzblx1.uni-regensburg.de/ezeit/detail.phtml?colors=' . '&jour_id=' . $journalId . '&bibid='. $this->bibID . '&lang=' . $this->lang;
+        $url = 'http://rzblx1.uni-regensburg.de/ezeit/detail.phtml?colors=' . '&jour_id=' . $journalId . '&bibid='. $this->bibID . '&lang=' . $this->lang;
         $HttpRequestData = $HttpPageConnection->getDataFromHttpPage($url);
         
         $moreDetails = array();
-
-        //"Preistyp Anmerkung"
-        $start = mb_stripos($HttpRequestData, "Preistyp Anmerkung:");
+        
+        //replace double white space in single
+        $HttpRequestData = trim(preg_replace('/\s\s+/', ' ', $HttpRequestData));
+        
+        //start "Preistyp Anmerkung"
+        $searchString = 'Preistyp Anmerkung';
+        
         if($this->lang == "en"){
-            $start = mb_stripos($HttpRequestData, "Pricetype annotation:");
+            $searchString = 'Pricetype annotation';
         }
-        if($start){
-            $stop = mb_stripos($HttpRequestData, "<br />", $start);
-            $price_type_annotation = trim(mb_substr($HttpRequestData, $start, $stop-$start-5));
-            $price_type_annotation = str_replace("</dt>", "", $price_type_annotation);
-            $price_type_annotation = str_replace("<br />", "", $price_type_annotation);
+
+        preg_match('/'. $searchString .':\s*<\/dt>\s*<dd class="defListContentDefinition">(.*)<\/dd>/mU', $HttpRequestData, $matches);
+
+        //preparing string
+        if($matches[1]){    
+            $price_type_annotation = str_replace("<br />", "", $matches[1]);
             $price_type_annotation = str_replace(":", "", $price_type_annotation);
-            $price_type_annotation = str_replace("<dd class=\"defListContentDefinition\">", "", $price_type_annotation);
+
             $price_type_annotation = utf8_encode(trim($price_type_annotation));
         }
         $moreDetails['price_type_annotation'] = $price_type_annotation;
-        
+
         return $moreDetails;
     }
 }

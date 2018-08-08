@@ -71,7 +71,7 @@ $('#alph_link').click(function(){
         <div class="datenbank-suche-wrapper">
             <h2 class="libconnect-h2"><f:translate key="LLL:EXT:libconnect/Resources/Private/Language/locallang.xml:tx_libconnect.dbis.miniform.show_databases" /></h2>
 
-            <form action="{listUrl}" method="get">
+	    <f:form name="dbis-mini-form-choose-licence" id="dbis-mini-form-choose-licence" controller="Dbis" method="post" pageUid="{listPid}">
                 <p>
                     <label for="libconnect_dbis_suche" class="hiddendebis"><f:translate key="LLL:EXT:libconnect/Resources/Private/Language/locallang.xml:tx_libconnect.dbis.miniform.select_access" /></label>
 
